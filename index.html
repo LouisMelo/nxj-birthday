@@ -48,6 +48,10 @@
             margin-top: 10px;
         }
 
+        .card-header {
+            text-align: center;
+        }
+
         .card-block {
             height: 400px;
         }
@@ -73,12 +77,12 @@
 <body>
     <div id="bar"></div>
     <div class="container">
-        <!-- <h1> title </h1> -->
+        🎂 Louisnow‘s Home 🎂
         <div class="row">
             <div class="col-md-6 offset-md-3 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <!-- info -->
+                        🎉 倪三岁生日PARTY的直播间
                     </div>
                     <div class="card-block">
                         <ul id="messages">
@@ -87,8 +91,7 @@
                 </div>
                 <br>
                 <div class="input-group">
-                    <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px">
-                    &nbsp
+                    <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px"> &nbsp
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="button" style="border-top-right-radius:5px;border-bottom-right-radius:5px" id="sendBtn">
                             <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
@@ -115,7 +118,7 @@
             $('#sendBtn').click(function () {
                 socket.emit('chat message', $('#m').val());
                 $('#m').val('');
-                $('#messages').animate({scrollTop: $('#messages').prop('scrollHeight')}, 500);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
                 return false;
             });
             socket.on('chat message', function (msg) {
