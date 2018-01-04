@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+        crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+        crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/07fb4515ea.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Courgette|Pacifico" rel="stylesheet">
     <title>Socket.io Chat</title>
     <style>
         * {
@@ -14,7 +23,10 @@
         }
 
         body {
-            font: 13px Helvetica, Arial;
+            font-size: 12px;
+            font-family: 'Open Sans', sans-serif;
+            color: #777;
+            background: #f9f9f9;
         }
 
         #bar {
@@ -29,32 +41,23 @@
             z-index: 1000;
         }
 
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: black;
+            text-align: center;
+            margin-top: 10px;
         }
 
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
-
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
+        .card-block {
+            height: 400px;
         }
 
         #messages {
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow-y: auto;
+            height: 400px;
         }
 
         #messages li {
@@ -69,24 +72,53 @@
 
 <body>
     <div id="bar"></div>
-    <ul id="messages">
-        <form action="">
-            <input id="m" autocomplete="off" />
-            <button>发送</button>
-        </form>
-    </ul>
+    <div class="container">
+        <!-- <h1> title </h1> -->
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <!-- info -->
+                    </div>
+                    <div class="card-block">
+                        <ul id="messages">
+                        </ul>
+                    </div>
+                </div>
+                <br>
+                <div class="input-group">
+                    <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px">
+                    &nbsp
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" type="button" style="border-top-right-radius:5px;border-bottom-right-radius:5px" id="sendBtn">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                            发送
+                        </button>
+                    </span>
+                    &nbsp
+                    <div class="btn-group dropup">
+                        <button class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" type="button">
+                            <i class="fa fa-gift" aria-hidden="true"></i>
+                            礼物
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         $(function () {
             var socket = io();
-            $('form').submit(function () {
+            $('#sendBtn').click(function () {
                 socket.emit('chat message', $('#m').val());
                 $('#m').val('');
+                $('#messages').animate({scrollTop: $('#messages').prop('scrollHeight')}, 500);
                 return false;
             });
-            socket.on('chat message', function(msg){
+            socket.on('chat message', function (msg) {
                 $('#messages').append($('<li>').text(msg));
             });
         });
