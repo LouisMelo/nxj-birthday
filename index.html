@@ -48,6 +48,11 @@
             margin-top: 10px;
         }
 
+        select {
+            width: 400px;
+            text-align-last: center;
+        }
+
         .card-header {
             text-align: center;
         }
@@ -59,22 +64,112 @@
         #messages {
             list-style-type: none;
             margin: 0;
-            padding: 0;
+            padding: 15px;
             overflow-y: auto;
             height: 400px;
         }
 
         #messages li {
-            padding: 5px 10px;
+            margin: 15px 0;
         }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
+        #messages li img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50em;
+            -moz-border-radius: 50em;
+            -webkit-border-radius: 50em;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        #messages li .chat-body {
+            margin-left: 70px;
+            background-color: #fff;
+            position: relative;
+            font-size: 11px;
+            padding: 10px;
+            border: 1px solid #f1f5fc;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
+
+        #messages li .chat-body .header {
+            padding-bottom: 5px;
+            border-bottom: 1px solid #f1f5fc;
+        }
+
+        #messages li .chat-body p {
+            margin: 0;
+        }
+
+        #messages li .chat-body:before {
+            position: absolute;
+            top: 10px;
+            left: -8px;
+            display: inline-block;
+            background: #fff;
+            width: 16px;
+            height: 16px;
+            border-top: 1px solid #f1f5fc;
+            border-left: 1px solid #f1f5fc;
+            content: '';
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+        }
+
+        .primary-font {
+            color: #3c8dbc;
         }
     </style>
 </head>
 
 <body>
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">让我看看谁来了づ(>^ω^
+                        <)喵</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="username" class="col-form-label">猜猜我是谁 (✪ω✪):</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="">选择一个小动物吧: </label>
+                            <select class="form-control" id="iconSelect">
+                                <option value="lion">🦁 大西几 🦁</option>
+                                <option value="dolphin">🐬 小海疼 🐬</option>
+                                <option value="wolf">🐺 大飞囊 🐺</option>
+                                <option value="tiger">🐯 大脑斧 🐯</option>
+                                <option value="mouse">🐭 小脑许 🐭</option>
+                            </select>
+                        </div>
+                        <!-- <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Message:</label>
+                                    <textarea class="form-control" id="message-text"></textarea>
+                                </div> -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="loginBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="bar"></div>
     <div class="container">
         <h2>🎂Louisnow‘sHome🎂</h2>
@@ -82,14 +177,17 @@
             <div class="col-md-6 offset-md-3 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        🎉 倪三岁生日PARTY的直播间
+                        🎉 欢迎来到倪三岁生日PARTY的直播间
                     </div>
                     <div class="card-block">
                         <ul id="messages">
                         </ul>
                     </div>
+                    <div class="card-footer text-center">当前在线人数: xxx</div>
                 </div>
-                <br>
+                <!-- change name button -->
+                <button class="btn btn-link" id="changeName" style="display:none">改个名字</button>
+                <hr>
                 <div class="input-group">
                     <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px"> &nbsp
                     <span class="input-group-btn">
@@ -112,17 +210,104 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script>
         $(function () {
             var socket = io();
+            var username;
+            var icon;
+            var welcome = '🎉 欢迎来到倪三岁生日PARTY的直播间';
+
+            // 发送聊天消息
             $('#sendBtn').click(function () {
-                socket.emit('chat message', $('#m').val());
+                username = Cookies.get('username');
+                icon = Cookies.get('icon');
+                var message = $('#m').val();
+                var time = (new Date()).toLocaleString();
+
+                socket.emit('chatMessage', { 'username': username, 'icon': icon, 'message': message, 'time': time });
+
+
+
+                // organize chat body
+                var img = $('<img>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
+                var imgSpan = $('<span>').addClass('pull-left').append(img);
+
+                var userBlock = $('<strong>').addClass('primary-font').text(username);
+                var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(time);
+                var pBlock = $('<p>').text(message);
+                var headerBlock = $('<div>').addClass('header');
+                headerBlock.append(userBlock);
+                headerBlock.append(timeBlock);
+                var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
+                chatBodyBlock.append(headerBlock);
+                chatBodyBlock.append(pBlock);
+                var li = $('<li>').addClass('clearfix');
+                li.append(imgSpan);
+                li.append(chatBodyBlock);
+                $('#messages').append(li);
                 $('#m').val('');
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
                 return false;
             });
-            socket.on('chat message', function (msg) {
-                $('#messages').append($('<li>').text(msg));
+
+            // 接收聊天消息
+            socket.on('chatMessage', function (msg) {
+                var img = $('<img/>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
+                var imgSpan = $('<span>').addClass('pull-left').append(img);
+
+                var userBlock = $('<strong>').addClass('primary-font').text(msg.username);
+                var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(msg.time);
+                var pBlock = $('<p>').text(msg.message);
+                var headerBlock = $('<div>').addClass('header');
+                headerBlock.append(userBlock);
+                headerBlock.append(timeBlock);
+                var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
+                chatBodyBlock.append(headerBlock);
+                chatBodyBlock.append(pBlock);
+                var li = $('<li>').addClass('clearfix');
+                li.append(imgSpan);
+                li.append(chatBodyBlock);
+                $('#messages').append(li);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+            });
+
+            $('#loginBtn').click(function () {
+                username = $('#username').val();
+                icon = $('#iconSelect').val();
+                $('#loginModal').modal('hide');
+                Cookies.set('username', username);
+                Cookies.set('icon', icon);
+                $('.card-header').text(welcome + '，' + username);
+
+                socket.emit('userLogin', { 'username': username, 'icon': icon });
+            });
+
+            socket.on('connect', function () {
+                if (Cookies.get('username')) {
+                    username = Cookies.get('username');
+                    icon = Cookies.get('icon');
+                    $('.card-header').text(welcome + '，' + username);
+                    socket.emit('userLogin', { 'username': username, 'icon': icon });
+                } else {
+                    // var date = new Date();
+                    // username = 'Anonymous-' + date.getTime();
+                    $('#loginModal').modal();
+                }
+            });
+
+            socket.on('userLogin', function (data) {
+                $('.card-footer').text('当前在线人数: ' + data.online);
+                console.log(data.loginInfo);
+            });
+
+            socket.on('userLogout', function (data) {
+                console.log(data.username + 'has logged out.');
+                $('.card-footer').text('当前在线人数: ' + data.online);
+            });
+
+            $('#changeName').click(function () {
+                $('#loginModal').modal();
             });
         });
     </script>
