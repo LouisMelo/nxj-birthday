@@ -27,9 +27,7 @@ MongoClient.connect(dburl, function (err, db) {
 
         db.collection('nxj_birthday').find({}).toArray(function (err, docs) {
             assert.equal(err, null);
-            docs.forEach(function (doc) {
-                socket.emit('chatMessage', doc);
-            });
+            socket.emit('loadMessages', docs);
         });
 
         socket.on('userLogin', function (loginInfo) {
@@ -52,7 +50,7 @@ MongoClient.connect(dburl, function (err, db) {
         socket.on('disconnect', function () {
             var username = users[socket.userIndex];
             users.splice(socket.userIndex, 1);
-            io.emit('userLogout', {'username': username, 'online': users.length });
+            io.emit('userLogout', { 'username': username, 'online': users.length });
             console.log('user disconnected');
         });
     });

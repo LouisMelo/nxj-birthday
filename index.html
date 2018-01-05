@@ -150,11 +150,11 @@
                         <div class="form-group">
                             <label for="">选择一个小动物吧: </label>
                             <select class="form-control" id="iconSelect">
-                                <option value="lion">🦁 大西几 🦁</option>
-                                <option value="dolphin">🐬 小海疼 🐬</option>
-                                <option value="wolf">🐺 大飞囊 🐺</option>
-                                <option value="tiger">🐯 大脑斧 🐯</option>
-                                <option value="mouse">🐭 小脑许 🐭</option>
+                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142755/lion.png">🦁 大西几 🦁</option>
+                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142755/lion.png">🐬 小海疼 🐬</option>
+                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/wolf.png">🐺 大飞囊 🐺</option>
+                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/tiger.png">🐯 大脑斧 🐯</option>
+                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/mouse.png">🐭 小脑许 🐭</option>
                             </select>
                         </div>
                         <!-- <div class="form-group">
@@ -224,51 +224,60 @@
                 icon = Cookies.get('icon');
                 var message = $('#m').val();
                 var time = (new Date()).toLocaleString();
+                var msg = { 'username': username, 'icon': icon, 'message': message, 'time': time };
 
-                socket.emit('chatMessage', { 'username': username, 'icon': icon, 'message': message, 'time': time });
-
-
+                socket.emit('chatMessage', msg);
 
                 // organize chat body
-                var img = $('<img>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
-                var imgSpan = $('<span>').addClass('pull-left').append(img);
+                // var img = $('<img>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
+                // var imgSpan = $('<span>').addClass('pull-left').append(img);
 
-                var userBlock = $('<strong>').addClass('primary-font').text(username);
-                var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(time);
-                var pBlock = $('<p>').text(message);
-                var headerBlock = $('<div>').addClass('header');
-                headerBlock.append(userBlock);
-                headerBlock.append(timeBlock);
-                var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
-                chatBodyBlock.append(headerBlock);
-                chatBodyBlock.append(pBlock);
-                var li = $('<li>').addClass('clearfix');
-                li.append(imgSpan);
-                li.append(chatBodyBlock);
-                $('#messages').append(li);
+                // var userBlock = $('<strong>').addClass('primary-font').text(username);
+                // var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(time);
+                // var pBlock = $('<p>').text(message);
+                // var headerBlock = $('<div>').addClass('header');
+                // headerBlock.append(userBlock);
+                // headerBlock.append(timeBlock);
+                // var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
+                // chatBodyBlock.append(headerBlock);
+                // chatBodyBlock.append(pBlock);
+                // var li = $('<li>').addClass('clearfix');
+                // li.append(imgSpan);
+                // li.append(chatBodyBlock);
+                // $('#messages').append(li);
+                appendMessage(msg);
                 $('#m').val('');
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
                 return false;
             });
 
+            // 接收历史消息
+            socket.on('loadMessages', function(docs){
+                docs.forEach(function(doc){
+                    appendMessage(doc);
+                });
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+            });
+
             // 接收聊天消息
             socket.on('chatMessage', function (msg) {
-                var img = $('<img/>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
-                var imgSpan = $('<span>').addClass('pull-left').append(img);
+                // var img = $('<img/>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
+                // var imgSpan = $('<span>').addClass('pull-left').append(img);
 
-                var userBlock = $('<strong>').addClass('primary-font').text(msg.username);
-                var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(msg.time);
-                var pBlock = $('<p>').text(msg.message);
-                var headerBlock = $('<div>').addClass('header');
-                headerBlock.append(userBlock);
-                headerBlock.append(timeBlock);
-                var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
-                chatBodyBlock.append(headerBlock);
-                chatBodyBlock.append(pBlock);
-                var li = $('<li>').addClass('clearfix');
-                li.append(imgSpan);
-                li.append(chatBodyBlock);
-                $('#messages').append(li);
+                // var userBlock = $('<strong>').addClass('primary-font').text(msg.username);
+                // var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(msg.time);
+                // var pBlock = $('<p>').text(msg.message);
+                // var headerBlock = $('<div>').addClass('header');
+                // headerBlock.append(userBlock);
+                // headerBlock.append(timeBlock);
+                // var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
+                // chatBodyBlock.append(headerBlock);
+                // chatBodyBlock.append(pBlock);
+                // var li = $('<li>').addClass('clearfix');
+                // li.append(imgSpan);
+                // li.append(chatBodyBlock);
+                // $('#messages').append(li);
+                appendMessage(msg);
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
@@ -310,6 +319,25 @@
                 $('#loginModal').modal();
             });
         });
+
+        function appendMessage(messageRec) {
+            var img = $('<img/>').attr('src', messageRec.icon);
+            var imgSpan = $('<span>').addClass('pull-left').append(img);
+
+            var userBlock = $('<strong>').addClass('primary-font').text(messageRec.username);
+            var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(messageRec.time);
+            var pBlock = $('<p>').text(messageRec.message);
+            var headerBlock = $('<div>').addClass('header');
+            headerBlock.append(userBlock);
+            headerBlock.append(timeBlock);
+            var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
+            chatBodyBlock.append(headerBlock);
+            chatBodyBlock.append(pBlock);
+            var li = $('<li>').addClass('clearfix');
+            li.append(imgSpan);
+            li.append(chatBodyBlock);
+            $('#messages').append(li);
+        }
     </script>
 </body>
 
