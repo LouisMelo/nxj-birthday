@@ -12,6 +12,8 @@ const assert = require('assert');
 const dburl = 'mongodb://louis:louisnow117@ds115085.mlab.com:15085/louismongo';
 // const dburl = 'mongodb://localhost:27017/nxj';
 
+app.use(express.static(__dirname));
+
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });

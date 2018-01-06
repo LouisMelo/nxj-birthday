@@ -14,6 +14,7 @@
         crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/07fb4515ea.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Courgette|Pacifico" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
     <title>Socket.io Chat</title>
     <style>
         * {
@@ -173,8 +174,12 @@
     <div id="bar"></div>
     <div class="container">
         <h2>🎂Louisnow‘sHome🎂</h2>
+
         <div class="row">
             <div class="col-md-6 offset-md-3 col-sm-12">
+                <div class="text-center">
+                        <img src="imgs/rocket.svg" alt="" id="giftImg" class="animated text-center" style="position:absolute;z-index:1000;width:300px;height:300px;right:150px;visibility:hidden;opacity:0.9">
+                </div>
                 <div class="card">
                     <div class="card-header">
                         🎉 欢迎来到倪三岁生日PARTY的直播间
@@ -198,13 +203,13 @@
                     </span>
                     &nbsp
                     <div class="btn-group dropup">
-                        <button class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" type="button">
+                        <button class="btn btn-warning text-white" type="button" id="giftBtn">
                             <i class="fa fa-gift" aria-hidden="true"></i>
                             礼物
                         </button>
-
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -251,9 +256,21 @@
                 return false;
             });
 
+            // 发送礼物
+            $('#giftBtn').click(function(){
+                $('#giftImg').css('visibility','visible').addClass('slideInUp');
+                setTimeout(function(){
+                    $('#giftImg').removeClass('slideInUp').addClass('rotateOut');
+                }, 2000);
+                setTimeout(function(){
+                    $('#giftImg').css('visibility','hidden');
+                },3000);
+                
+            })
+
             // 接收历史消息
-            socket.on('loadMessages', function(docs){
-                docs.forEach(function(doc){
+            socket.on('loadMessages', function (docs) {
+                docs.forEach(function (doc) {
                     appendMessage(doc);
                 });
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
