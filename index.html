@@ -14,7 +14,7 @@
         crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/07fb4515ea.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Courgette|Pacifico" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.js"></script>
     <title>Socket.io Chat</title>
     <style>
         * {
@@ -44,9 +44,11 @@
 
         h2 {
             font-family: 'Pacifico', cursive;
-            color: black;
+            color: white;
             text-align: center;
             margin-top: 10px;
+            padding: 5px;
+            background:rgba(255, 99, 132, 0.2);
         }
 
         select {
@@ -68,6 +70,8 @@
             padding: 15px;
             overflow-y: auto;
             height: 380px;
+            background-image: url('/imgs/sailor-moon.jpeg');
+            background-size: 100%
         }
 
         #messages li {
@@ -151,11 +155,11 @@
                         <div class="form-group">
                             <label for="">选择一个小动物吧: </label>
                             <select class="form-control" id="iconSelect">
-                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142755/lion.png">🦁 大西几 🦁</option>
-                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142873/dolphin.png">🐬 小海疼 🐬</option>
-                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/wolf.png">🐺 大飞囊 🐺</option>
-                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/tiger.png">🐯 大脑斧 🐯</option>
-                                <option value="https://res.cloudinary.com/louismelo/image/upload/v1515142756/mouse.png">🐭 小脑许 🐭</option>
+                                <option value="imgs/lion.png">🦁 大西几 🦁</option>
+                                <option value="imgs/dolphin.png">🐬 小海疼 🐬</option>
+                                <option value="imgs/wolf.png">🐺 大飞囊 🐺</option>
+                                <option value="imgs/tiger.png">🐯 大脑斧 🐯</option>
+                                <option value="imgs/mouse.png">🐭 小脑许 🐭</option>
                             </select>
                         </div>
                         <!-- <div class="form-group">
@@ -173,13 +177,12 @@
 
     <div id="bar"></div>
     <div class="container">
-        <h2>🎂Louisnow‘sHome🎂</h2>
+
+        <h2 class="rounded">🎂 Louisnow‘sHome 🎂</h2>
 
         <div class="row">
-            <div class="col-md-6 offset-md-3 col-sm-12">
-                <div class="text-center">
-                        <img src="imgs/rocket.svg" alt="" id="giftImg" class="animated text-center" style="position:absolute;z-index:1000;width:300px;height:300px;right:150px;visibility:hidden;opacity:0.9">
-                </div>
+            <div class="col-md-6 offset-md-3 col-sm-12 chat-block">
+
                 <div class="card">
                     <div class="card-header">
                         🎉 欢迎来到倪三岁生日PARTY的直播间
@@ -189,11 +192,18 @@
                         </ul>
                     </div>
                     <div class="card-footer text-center">当前在线人数: xxx</div>
+
                 </div>
                 <!-- change name button -->
                 <button class="btn btn-link" id="changeName" style="display:none">改个名字</button>
                 <hr>
-                <div class="input-group">
+                <!-- <div style="position:absolute;left:50%;bottom:20px;z-index:1000;opacity:0.8;">
+                    <div style="position: relative; left: -50%;">
+                        <h3 style="display:none">感谢xxxxx的火箭</h3>
+                        <img src="imgs/cat.png" id="giftImg">
+                    </div>
+                </div> -->
+                <div class="input-group" style="z-index:1010">
                     <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px"> &nbsp
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="button" style="border-top-right-radius:5px;border-bottom-right-radius:5px" id="sendBtn">
@@ -209,6 +219,7 @@
                         </button>
                     </div>
                 </div>
+
 
             </div>
         </div>
@@ -233,23 +244,6 @@
 
                 socket.emit('chatMessage', msg);
 
-                // organize chat body
-                // var img = $('<img>').attr('src', 'https://image.flaticon.com/icons/svg/25/25231.svg');
-                // var imgSpan = $('<span>').addClass('pull-left').append(img);
-
-                // var userBlock = $('<strong>').addClass('primary-font').text(username);
-                // var timeBlock = $('<small>').addClass('pull-right').addClass('text-muted').text(time);
-                // var pBlock = $('<p>').text(message);
-                // var headerBlock = $('<div>').addClass('header');
-                // headerBlock.append(userBlock);
-                // headerBlock.append(timeBlock);
-                // var chatBodyBlock = $('<div>').addClass('chat-body').addClass('clearfix');
-                // chatBodyBlock.append(headerBlock);
-                // chatBodyBlock.append(pBlock);
-                // var li = $('<li>').addClass('clearfix');
-                // li.append(imgSpan);
-                // li.append(chatBodyBlock);
-                // $('#messages').append(li);
                 appendMessage(msg);
                 $('#m').val('');
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
@@ -257,15 +251,24 @@
             });
 
             // 发送礼物
-            $('#giftBtn').click(function(){
-                $('#giftImg').css('visibility','visible').addClass('slideInUp');
-                setTimeout(function(){
-                    $('#giftImg').removeClass('slideInUp').addClass('rotateOut');
-                }, 2000);
-                setTimeout(function(){
-                    $('#giftImg').css('visibility','hidden');
-                },3000);
-                
+            $('#giftBtn').click(function () {
+                giftEffect('imgs/rocket.png');
+
+                // anime({
+                //     targets: '#giftImg',
+                //     translateY: [
+                //         { value: -300, duration: 2200 },
+                //         { value: 0, duration: 800 }
+                //     ],
+                //     rotate: [
+                //         {value:360},
+                //         {value:-360}
+                //     ]
+                // });
+                // setTimeout(function () {
+                //     $('#giftImg').css('visibility', 'hidden');
+                // }, 3000);
+
             })
 
             // 接收历史消息
@@ -354,6 +357,32 @@
             li.append(imgSpan);
             li.append(chatBodyBlock);
             $('#messages').append(li);
+        }
+
+        function giftEffect(gift) {
+            $('.giftBlock').remove();
+            var img = $('<img>').attr('src', gift).addClass('giftImg');
+            var dummy = $('<h3>').css('display', 'none').text('感谢xxx的xxx');
+            var inner = $('<div>').css('position', 'relative').css('left', '-50%');
+            inner.append(dummy);
+            inner.append(img);
+            var outer = $('<div>').css('position', 'absolute').css('left', '50%').css('bottom', 20).css('z-index', 1000).css('opacity', 0.8).addClass('giftBlock');
+            outer.append(inner);
+            $('.chat-block').append(outer);
+
+            var timeline = anime.timeline();
+            timeline
+                .add({
+                    targets: '.giftImg',
+                    translateY: {
+                        value: -200,
+                        duration: 4000
+                    },
+                    rotate: 315
+                });
+            setTimeout(function () {
+                outer.remove();
+            }, 6000);
         }
     </script>
 </body>
