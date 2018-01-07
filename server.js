@@ -43,10 +43,18 @@ MongoClient.connect(dburl, function (err, db) {
         socket.on('chatMessage', function (msg) {
             // console.log('message: ' + msg);
             db.collection('nxj_birthday').insertOne(msg, function (err, res) {
-                console.log('successfully insert one document.');
+                console.log('successfully insert one chat record.');
             });
             // send messages to others
             socket.broadcast.emit('chatMessage', msg);
+        });
+
+        socket.on('giftMessage', function (msg) {
+            db.collection('nxj_birthday').insertOne(msg, function(err, res){
+                console.log('successfully insert one gift record')
+            });
+
+            socket.broadcast.emit('giftMessage', msg);
         });
 
         socket.on('disconnect', function () {

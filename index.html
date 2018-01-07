@@ -133,6 +133,16 @@
             -o-transform: rotate(-45deg);
         }
 
+        .giftText {
+            background-color: rgba(71, 63, 69, 0.2);
+            width: 70%;
+            margin: 0 auto;
+            color: plum;
+            padding-top: 2px;
+            border-color: rgba(71, 63, 69, 0.8);
+            font-weight: bold;
+        }
+
         .primary-font {
             color: #3c8dbc;
         }
@@ -339,60 +349,109 @@
                 icon = Cookies.get('icon');
                 var message = $('#m').val();
                 var time = (new Date()).toLocaleString();
-                var msg = { 'username': username, 'icon': icon, 'message': message, 'time': time };
+                var msg = { 'username': username, 'icon': icon, 'message': message, 'time': time, 'type': 'chat' };
 
                 socket.emit('chatMessage', msg);
 
-                appendMessage(msg);
+                appendChatMessage(msg);
                 $('#m').val('');
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
                 return false;
             });
 
             // 发送礼物
-            $('#giftBtn').click(function () {
-                giftEffect('imgs/rocket.png');
-            });
-
-            $('#sushiBtn').click(function(){
+            $('#sushiBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/sushi.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 请小寿星吃的三文鱼寿司, Mua~😘';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/sushi.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#pizzaBtn').click(function(){
+            $('#pizzaBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/pizza.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 请小寿星吃的爱心Pizza, Mua~😘';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/pizza.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#spaguettiBtn').click(function(){
+            $('#spaguettiBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/spaguetti.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 请小寿星吃的奶油意面本面, Mua~😘';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/spaguetti.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#doughnutBtn').click(function(){
+            $('#doughnutBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/doughnut.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 请小寿星吃的甜到❤️甜甜圈, Mua~😘';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/doughnut.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#dogBtn').click(function(){
+            $('#dogBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/dog.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 送给小寿星的柯基小短腿, 汪汪汪~🐶';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/dog.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#catBtn').click(function(){
+            $('#catBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/black-cat.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = '谢谢 ' + username + ' 送给小寿星的终身吸猫会员卡, Meow~🐈';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/black-cat.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            $('#cakeBtn').click(function(){
+            $('#cakeBtn').click(function () {
                 $('#giftModal').modal('hide');
                 giftEffect('imgs/birthday-cake.png');
+                username = Cookies.get('username');
+                var time = (new Date()).toLocaleString();
+                var message = username + ' 祝小寿星生日快乐, 并分享了一块蛋糕~🍰';
+                var msg = { 'username': username, 'message': message, 'time': time, 'type': 'gift', 'gift': 'imgs/birthday-cake.png' };
+                socket.emit('giftMessage', msg);
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
             // 接收历史消息
             socket.on('loadMessages', function (docs) {
                 docs.forEach(function (doc) {
-                    appendMessage(doc);
+                    if(doc.type == 'chat'){
+                        appendChatMessage(doc);
+                    } else if (doc.type == 'gift'){
+                        appendGiftMessage(doc.message);
+                    }
                 });
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
@@ -415,8 +474,14 @@
                 // li.append(imgSpan);
                 // li.append(chatBodyBlock);
                 // $('#messages').append(li);
-                appendMessage(msg);
+                appendChatMessage(msg);
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+            });
+
+            socket.on('giftMessage', function(msg){
+                appendGiftMessage(msg.message);
+                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+                giftEffect(msg.gift);
             });
 
             $('#loginBtn').click(function () {
@@ -458,7 +523,8 @@
             });
         });
 
-        function appendMessage(messageRec) {
+        // 聊天记录
+        function appendChatMessage(messageRec) {
             var img = $('<img/>').attr('src', messageRec.icon);
             var imgSpan = $('<span>').addClass('pull-left').append(img);
 
@@ -474,6 +540,14 @@
             var li = $('<li>').addClass('clearfix');
             li.append(imgSpan);
             li.append(chatBodyBlock);
+            $('#messages').append(li);
+        }
+
+        // 礼物记录
+        function appendGiftMessage(messageRec) {
+            var p = $('<p>').addClass('text-center').addClass('giftText').addClass('rounded').text(messageRec);
+            var li = $('<li>').addClass('clearfix');
+            li.append(p);
             $('#messages').append(li);
         }
 
