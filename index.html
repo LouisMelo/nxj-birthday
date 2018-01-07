@@ -15,7 +15,7 @@
     <script src="https://use.fontawesome.com/07fb4515ea.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Courgette|Pacifico" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.js"></script>
-    <title>Socket.io Chat</title>
+    <title>Happy B'day to U</title>
     <style>
         * {
             margin: 0;
@@ -48,12 +48,16 @@
             text-align: center;
             margin-top: 10px;
             padding: 5px;
-            background:rgba(255, 99, 132, 0.2);
+            background: rgba(255, 99, 132, 0.2);
         }
 
         select {
             width: 400px;
             text-align-last: center;
+        }
+
+        .card {
+            margin-top: -7px;
         }
 
         .card-header {
@@ -81,9 +85,9 @@
         #messages li img {
             width: 45px;
             height: 45px;
-            border-radius: 50em;
-            -moz-border-radius: 50em;
-            -webkit-border-radius: 50em;
+            /* border-radius: 20em;
+            -moz-border-radius: 20em;
+            -webkit-border-radius: 20em; */
         }
 
         img {
@@ -132,6 +136,13 @@
         .primary-font {
             color: #3c8dbc;
         }
+
+        .img-thumbnail {
+            width: 128px;
+            height: 128px;
+            border-color: rgba(255, 99, 132, 0.2);
+            border-width: 2px;
+        }
     </style>
 </head>
 
@@ -175,6 +186,89 @@
         </div>
     </div>
 
+    <div class="modal fade" id="giftModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:rgba(54, 162, 235, 0.2)">
+                    <h5 class="modal-title">给吃货主播送个礼物吧(＠。ε。＠)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:rgba(54, 162, 235, 0.5)">
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/sushi.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-primary" style="width:100%" id="sushiBtn">SUSHI ￥100</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/pizza.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-primary" style="width:100%" id="pizzaBtn">PIZZA ￥100</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/spaguetti.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-primary" style="width:100%" id="spaguettiBtn">SPAGHETTI ￥100</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/doughnut.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-primary" style="width:100%" id="doughnutBtn">DOUGHNUT ￥100</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/dog.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-warning" style="width:100%" id="dogBtn">Woof~ ￥500</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/black-cat.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-warning" style="width:100%" id="catBtn">Meow~ ￥1000</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" style="margin-top:10px">
+                                <div class="card mx-auto d-block text-center" style="width:250px;border-width:3px;background-color:rgba(255, 99, 132, 0.8)">
+                                    <img src="imgs/birthday-cake.png" alt="" class="card-img-top">
+                                    <div class="card-body">
+                                        <button class="btn btn-danger" style="width:100%" id="cakeBtn">I 💗 U ￥10000</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="bar"></div>
     <div class="container">
 
@@ -203,6 +297,7 @@
                         <img src="imgs/cat.png" id="giftImg">
                     </div>
                 </div> -->
+
                 <div class="input-group" style="z-index:1010">
                     <input class="form-control border no-shadow" placeholder="请输入..." id="m" style="border-top-right-radius:5px;border-bottom-right-radius:5px"> &nbsp
                     <span class="input-group-btn">
@@ -213,7 +308,11 @@
                     </span>
                     &nbsp
                     <div class="btn-group dropup">
-                        <button class="btn btn-warning text-white" type="button" id="giftBtn">
+                        <!-- <button class="btn btn-warning text-white" type="button" id="giftBtn">
+                            <i class="fa fa-gift" aria-hidden="true"></i>
+                            礼物
+                        </button> -->
+                        <button class="btn btn-warning text-white" type="button" data-toggle="modal" data-target="#giftModal">
                             <i class="fa fa-gift" aria-hidden="true"></i>
                             礼物
                         </button>
@@ -253,23 +352,42 @@
             // 发送礼物
             $('#giftBtn').click(function () {
                 giftEffect('imgs/rocket.png');
+            });
 
-                // anime({
-                //     targets: '#giftImg',
-                //     translateY: [
-                //         { value: -300, duration: 2200 },
-                //         { value: 0, duration: 800 }
-                //     ],
-                //     rotate: [
-                //         {value:360},
-                //         {value:-360}
-                //     ]
-                // });
-                // setTimeout(function () {
-                //     $('#giftImg').css('visibility', 'hidden');
-                // }, 3000);
+            $('#sushiBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/sushi.png');
+            });
 
-            })
+            $('#pizzaBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/pizza.png');
+            });
+
+            $('#spaguettiBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/spaguetti.png');
+            });
+
+            $('#doughnutBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/doughnut.png');
+            });
+
+            $('#dogBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/dog.png');
+            });
+
+            $('#catBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/black-cat.png');
+            });
+
+            $('#cakeBtn').click(function(){
+                $('#giftModal').modal('hide');
+                giftEffect('imgs/birthday-cake.png');
+            });
 
             // 接收历史消息
             socket.on('loadMessages', function (docs) {
@@ -378,7 +496,7 @@
                         value: -200,
                         duration: 4000
                     },
-                    rotate: 315
+                    rotate: 360
                 });
             setTimeout(function () {
                 outer.remove();
