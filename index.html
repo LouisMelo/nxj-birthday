@@ -161,17 +161,20 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">让我看看谁来了づ(>^ω^
-                        <)喵</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <h5 class="modal-title" id="exampleModalLabel">让我看看谁来了 •̀.̫•́✧</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
+
                     <form>
                         <div class="form-group">
                             <label for="username" class="col-form-label">小宝贝你叫什么名字 (✪ω✪):</label>
                             <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="alert alert-danger d-none" role="alert" id="emptyName">
+                            总得让我知道你是谁吧~
                         </div>
                         <div class="form-group">
                             <label for="">选择一个小动物当头像吧: </label>
@@ -195,6 +198,7 @@
                                     <textarea class="form-control" id="message-text"></textarea>
                                 </div> -->
                     </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="loginBtn">Confirm</button>
@@ -207,7 +211,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color:rgba(54, 162, 235, 0.2)">
-                    <h5 class="modal-title">给吃货主播送个礼物吧(＠。ε。＠)</h5>
+                    <h5 class="modal-title">给吃货主播送个礼物吧(ꈍᴗꈍ)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -285,6 +289,25 @@
             </div>
         </div>
     </div>
+    <!-- empty message warning -->
+    <div class="modal" tabindex="-1" role="dialog" id="emptyModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">房管 "刘学斌最帅" 说了:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>请输入内容后再点击发送哦~~</h4>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="bar"></div>
     <div class="container">
@@ -355,14 +378,18 @@
                 username = Cookies.get('username');
                 icon = Cookies.get('icon');
                 var message = $('#m').val();
-                var time = (new Date()).toLocaleString();
-                var msg = { 'username': username, 'icon': icon, 'message': message, 'time': time, 'type': 'chat' };
+                if (message != "") {
+                    var time = (new Date()).toLocaleString();
+                    var msg = { 'username': username, 'icon': icon, 'message': message, 'time': time, 'type': 'chat' };
 
-                socket.emit('chatMessage', msg);
+                    socket.emit('chatMessage', msg);
 
-                appendChatMessage(msg);
-                $('#m').val('');
-                $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+                    appendChatMessage(msg);
+                    $('#m').val('');
+                    $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
+                } else {
+                    $('#emptyModal').modal();
+                }
                 return false;
             });
 
@@ -454,9 +481,9 @@
             // 接收历史消息
             socket.on('loadMessages', function (docs) {
                 docs.forEach(function (doc) {
-                    if(doc.type == 'chat'){
+                    if (doc.type == 'chat') {
                         appendChatMessage(doc);
-                    } else if (doc.type == 'gift'){
+                    } else if (doc.type == 'gift') {
                         appendGiftMessage(doc.message);
                     }
                 });
@@ -485,7 +512,7 @@
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
             });
 
-            socket.on('giftMessage', function(msg){
+            socket.on('giftMessage', function (msg) {
                 appendGiftMessage(msg.message);
                 $('#messages').animate({ scrollTop: $('#messages').prop('scrollHeight') }, 500);
                 giftEffect(msg.gift);
@@ -494,12 +521,17 @@
             $('#loginBtn').click(function () {
                 username = $('#username').val();
                 icon = $('#iconSelect').val();
-                $('#loginModal').modal('hide');
-                Cookies.set('username', username);
-                Cookies.set('icon', icon);
-                $('.card-header').text(welcome + '，' + username);
+                if (username != "") {
+                    $('#loginModal').modal('hide');
+                    Cookies.set('username', username);
+                    Cookies.set('icon', icon);
+                    $('.card-header').text(welcome + '，' + username);
 
-                socket.emit('userLogin', { 'username': username, 'icon': icon });
+                    socket.emit('userLogin', { 'username': username, 'icon': icon });
+                } else {
+                    $('#emptyName').removeClass('d-none');
+                }
+
             });
 
             socket.on('connect', function () {
